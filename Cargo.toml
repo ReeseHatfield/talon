@@ -1,0 +1,8 @@
+[package]
+name = "talon"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serenity = { version = "0.12", features = ["framework", "standard_framework"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
