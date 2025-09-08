@@ -1,8 +1,12 @@
 use serenity::async_trait;
 use serenity::model::channel::Message;
+use serenity::http::Http;
+use serenity::model::id::ChannelId;
 use serenity::model::gateway::Ready;
 use serenity::prelude::*;
-use std::{error::Error, fs};
+use std::{error::Error, fs, sync::Arc};
+
+mod bird_reader;
 
 struct Handler;
 
@@ -19,6 +23,12 @@ impl EventHandler for Handler {
     }
 }
 
+
+async fn send_to_discord(http: &Http, channel: ChannelId, content: &str) {
+    let _ = channel.say(http, content).await;
+}
+
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let token = read_token(".env")?;
@@ -28,7 +38,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .event_handler(Handler)
         .await?;
 
-    client.start().await?;
+    let _ = client.start();
+
+
+
+    let http = client.http;
+    bird_reader::live_bird_feed(http, ChannelId::new(1224514100210569327));
+
+
+
     Ok(())
 }
 
