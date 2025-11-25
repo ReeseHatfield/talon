@@ -4,8 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+anyhow = "1.0.100"
 atty = "0.2.14"
 crossterm = "0.29.0"
+image = { version = "0.25.9", default-features = false, features = ["png"] }
+nokhwa = "0.10.10"
 serenity = { version = "0.12", features = ["framework", "standard_framework"] }
 termion = "4.0.5"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }

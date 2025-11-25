@@ -1,10 +1,14 @@
-use serenity::async_trait;
+use serenity::{all::CreateAttachment, async_trait};
 use serenity::model::channel::Message;
 use serenity::http::Http;
 use serenity::model::id::ChannelId;
 use serenity::model::gateway::Ready;
 use serenity::prelude::*;
-use std::{error::Error, fs, sync::Arc};
+
+use serenity::builder::{ CreateMessage};
+
+use tokio::fs::File;
+use std::{error::Error, fs, path::Path, sync::Arc};
 
 mod bird_reader;
 
@@ -29,6 +33,36 @@ async fn send_to_discord(http: &Http, channel: ChannelId, content: &str) {
 }
 
 
+
+pub async fn send_image(
+    http: &Http,
+    channel: ChannelId,
+    image_path: &str,
+    message: &str,
+) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    if !Path::new(image_path).exists() {
+        eprintln!("file not found: {}", image_path);
+        return Ok(());
+    }
+
+    let f = File::open(image_path).await?;
+
+    let attachment = CreateAttachment::file(&f, Path::new(image_path)
+        .file_name()
+        .and_then(|os| os.to_str())
+        .ok_or("invalid filename")?
+    ).await?;
+
+    let builder = CreateMessage::new()
+        .content(message)
+        .add_file(attachment);
+
+    channel.send_message(http, builder).await?;
+
+    Ok(())
+}
+
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let token = read_token(".env")?;
@@ -43,7 +77,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
 
     let http = client.http;
-    bird_reader::live_bird_feed(http, ChannelId::new(1224514100210569327));
+    bird_reader::live_bird_feed(http, ChannelId::new(1224514100210569327)).await;
 
 
 
