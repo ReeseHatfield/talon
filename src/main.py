@@ -12,10 +12,7 @@ def find_cam_index() -> int:
         if test_cap.isOpened():
             print(f"Camera found at index {i}")
             return i
-            # cap = test_cap  
-            # break
         else:
-            # print(f"No camera at index {i}")
             test_cap.release()
     
     raise Exception("could not find cam index")
