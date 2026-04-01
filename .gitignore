@@ -4,3 +4,7 @@ target
 venv
 
 photo.jpg
+
+models/*
+
+snap.jpg

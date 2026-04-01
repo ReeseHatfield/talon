@@ -1,41 +1,32 @@
 import cv2
-from datetime import datetime
+import time
+import requests
+import os
 
-cap = None
+CHANNEL_ID = "1224514100210569327"
 
-
-# test like 6 indexes to find the camera. I dont think there is a better way to handle this sadly
 def find_cam_index() -> int:
-    
     for i in range(6):
         test_cap = cv2.VideoCapture(i)
         if test_cap.isOpened():
-            print(f"Camera found at index {i}")
-            return i
-        else:
             test_cap.release()
+            return i
+    raise Exception("Could not find camera index")
+
+
+def load_token() -> str:
     
-    raise Exception("could not find cam index")
+    with open(".env", "r") as f:
+        line = f.read().strip()
+        
+        return line.split("TOKEN=")[-1]
 
-
-cam_index: int = find_cam_index() 
-
-capture = cv2.VideoCapture(cam_index)
-
-
-if capture is None or not capture.isOpened():
-    print("Cannot open camera")
-    exit()
-
-ret, frame = capture.read()
-
-if not ret:
-    print("Failed to grab frame")
-else:
-    filename = datetime.now().strftime("%Y%m%d_%H%M%S")
-    cv2.imwrite(f"img/{filename}.jpg", frame)
-    cv2.imwrite("photo.jpg", frame)
-    print("Saved photo.jpg")
-
-capture.release()
-cv2.destroyAllWindows()
+    
+def main() -> None:
+    
+    BOT_TOKEN = load_token()
+    CAM_INDEX = find_cam_index()
+    cap = cv2.VideoCapture(CAM_INDEX)
+    
+if __name__ == "__main__":
+    main()
