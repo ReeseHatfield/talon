@@ -83,7 +83,7 @@ def is_dark_in_dayton():
 CHANNEL_ID = "1224514100210569327"
 BOT_TOKEN = load_token()
 CAM_INDEX = find_cam_index()
-FRAME_DIFF_SENSITIVITY_PX = 100_000
+FRAME_DIFF_SENSITIVITY_PX = 200_000
 
 def main() -> None:
     
