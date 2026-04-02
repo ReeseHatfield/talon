@@ -5,8 +5,10 @@ import os
 
 
 # I hate this, but i feel like it might be the best way sadly
+# cam index on my laptop is like 3
+# cam index on my laptop islike 20 something
 def find_cam_index() -> int:
-    for i in range(6):
+    for i in range(25):
         test_cap = cv2.VideoCapture(i)
         if test_cap.isOpened():
             test_cap.release()
@@ -58,6 +60,30 @@ def send_image_to_discord(img_path: str, headers):
         else:
             print(f"Error: {r.status_code} - {r.text}")
 
+import datetime
+import time
+
+def is_dark_in_dayton():
+    # on its own does factor in DST 
+    now = datetime.datetime.now()
+    hour = now.hour + (now.minute / 60)
+    month = now.month
+    
+    # arghhhh
+    is_dst = time.localtime().tm_isdst > 0
+    
+    if month in [11, 12, 1, 2]: 
+        # winter= shorter days
+        sunrise, sunset = 7.5, 17.5
+    elif month in [5, 6, 7, 8]: 
+        # summer= longer days
+        sunrise, sunset = 5.5, 21.0
+    else:                       
+        # spring/fall default
+        sunrise, sunset = 6.5, 19.5
+        
+    
+    return not (sunrise <= hour <= sunset)
 
 # todo read me in
 CHANNEL_ID = "1224514100210569327"
@@ -76,6 +102,9 @@ def main() -> None:
     print("monitoring for motion...")
 
     while True:
+        if is_dark_in_dayton():
+            continue
+        
         ret, frame1 = cap.read()
         time.sleep(0.1) 
         ret, frame2 = cap.read()
