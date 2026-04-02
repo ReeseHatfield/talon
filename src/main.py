@@ -64,26 +64,20 @@ import datetime
 import time
 
 def is_dark_in_dayton():
-    # on its own does factor in DST 
     now = datetime.datetime.now()
-    hour = now.hour + (now.minute / 60)
-    month = now.month
     
-    # arghhhh
-    is_dst = time.localtime().tm_isdst > 0
+    decimal_minute = now.minute / 60
     
-    if month in [11, 12, 1, 2]: 
-        # winter= shorter days
-        sunrise, sunset = 7.5, 17.5
-    elif month in [5, 6, 7, 8]: 
-        # summer= longer days
-        sunrise, sunset = 5.5, 21.0
-    else:                       
-        # spring/fall default
-        sunrise, sunset = 6.5, 19.5
-        
+    #  hour as a decimal + minute value (as int) to decimal
+    decimal_hour = now.hour + decimal_minute
     
-    return not (sunrise <= hour <= sunset)
+    
+    is_in_light_window = 7.0 <= decimal_hour and decimal_hour <= 19.5 
+    # 7 am to 730 pm
+    return not is_in_light_window
+
+
+
 
 # todo read me in
 CHANNEL_ID = "1224514100210569327"
