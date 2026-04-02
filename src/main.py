@@ -83,48 +83,47 @@ def is_dark_in_dayton():
 CHANNEL_ID = "1224514100210569327"
 BOT_TOKEN = load_token()
 CAM_INDEX = find_cam_index()
-FRAME_DIFF_SENSITIVITY_PX = 200_000
+MOTION_THRESHOLD_PX = 10000
 
 def main() -> None:
-    
     cap = cv2.VideoCapture(CAM_INDEX)
-    
     last_capture = 0
-
     headers = build_header()
 
     print("monitoring for motion...")
 
     while True:
         if is_dark_in_dayton():
+            # saves on my power bill
+            time.sleep(200)
             continue
         
         ret, frame1 = cap.read()
-        time.sleep(0.1) 
+        time.sleep(0.2)
         ret, frame2 = cap.read()
 
         if not ret:
             break
 
-        # check motion
-        frame_diff = cv2.absdiff(frame1, frame2)
-        flat_diff_no_color = cv2.cvtColor(frame_diff, cv2.COLOR_BGR2GRAY) 
-        if cv2.countNonZero(flat_diff_no_color) < FRAME_DIFF_SENSITIVITY_PX:
-            continue
+        gray1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
+        gray2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+        gray1 = cv2.GaussianBlur(gray1, (21, 21), 0)
+        gray2 = cv2.GaussianBlur(gray2, (21, 21), 0)
+
+        delta = cv2.absdiff(gray1, gray2)
+        thresh = cv2.threshold(delta, 25, 255, cv2.THRESH_BINARY)[1]
+        thresh = cv2.dilate(thresh, None, iterations=2)
         
-        
-        if check_time(last_capture):
-            print("Motion Detected. Taking pic...")
-            time.sleep(2)
-            
-            img_path = take_pic(cap)
-            
-            send_image_to_discord(img_path, headers)
-            
-            last_capture = time.time()
+        motion_score = cv2.countNonZero(thresh)
+
+        if motion_score > MOTION_THRESHOLD_PX:
+            if check_time(last_capture):
+                print(f"Motion Detected ({motion_score}). Taking pic...")
+                time.sleep(1)
+                img_path = take_pic(cap)
+                send_image_to_discord(img_path, headers)
+                last_capture = time.time()
 
     cap.release()
-    
-
 if __name__ == "__main__":
     main()
