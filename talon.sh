@@ -10,4 +10,4 @@ source venv/bin/activate
 
 pip install -r requirements.txt
 
-nohup python3 src/main.py > talon.out &
+nohup python3 -u src/main.py > talon.out &
