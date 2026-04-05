@@ -8,3 +8,6 @@ photo.jpg
 models/*
 
 snap.jpg
+
+# nohup output
+talon.out
