@@ -1,7 +1,12 @@
 #!/bin/bash
 
 
-set -e
+
+python3 -m venv venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
 
 echo "Running TALON as a long running server process"
 
