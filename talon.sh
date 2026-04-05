@@ -1,13 +1,13 @@
 #!/bin/bash
 
+pip install --upgrade pip
 
-
-python3 -m venv venv
+if [ ! -d "venv" ]; then
+    python3 -m venv venv
+fi
 
 source venv/bin/activate
 
 pip install -r requirements.txt
-
-echo "Running TALON as a long running server process"
 
 nohup python3 src/main.py > talon.out &
