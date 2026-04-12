@@ -2,6 +2,8 @@ import cv2
 import time
 import requests
 import os
+import datetime
+import time
 
 
 # I hate this, but i feel like it might be the best way sadly
@@ -60,9 +62,6 @@ def send_image_to_discord(img_path: str, headers):
         else:
             print(f"Error: {r.status_code} - {r.text}")
 
-import datetime
-import time
-
 def is_dark_in_dayton():
     now = datetime.datetime.now()
     
@@ -86,7 +85,8 @@ CAM_INDEX = find_cam_index()
 MOTION_THRESHOLD_PX = 10000
 
 def main() -> None:
-    cap = cv2.VideoCapture(CAM_INDEX)
+    # cap = cv2.VideoCapture(CAM_INDEX)
+    cap = None
     last_capture = 0
     headers = build_header()
 
@@ -95,15 +95,37 @@ def main() -> None:
     while True:
         if is_dark_in_dayton():
             # saves on my power bill
+            if cap is not None:
+                cap.release()
+                cap = None
+    
             time.sleep(200)
             continue
+        
+        # if the camera is not open for some reason?
+        # this will trigger when it turns ~"daylight"
+        # but also, as a super long running program, the camera sometimes
+        # fails to load properly
+        if cap is None or not cap.isOpened():
+            cap = cv2.VideoCapture(CAM_INDEX)
+            if not cap.isOpened():
+                print("Camera not found")
+                print("reattemping opening in 30 seconds")
+                time.sleep(30)
+                continue
         
         ret, frame1 = cap.read()
         time.sleep(0.2)
         ret, frame2 = cap.read()
 
         if not ret:
-            break
+            print("Camera seems to have lost a frame")
+            print("Trying to reinitialize camera")
+            # just kill the camera
+            # tries to re-init on loop repeat
+            cap.release()
+            cap = None
+            continue
 
         gray1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
         gray2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
