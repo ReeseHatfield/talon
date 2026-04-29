@@ -5,6 +5,12 @@ import os
 import datetime
 import time
 
+# todo read me in
+CHANNEL_ID = "1224514100210569327"
+BOT_TOKEN = load_token()
+CAM_INDEX = find_cam_index()
+MOTION_THRESHOLD_PX = 10000
+
 
 # I hate this, but i feel like it might be the best way sadly
 # cam index on my laptop is like 3
@@ -76,13 +82,6 @@ def is_dark_in_dayton():
     return not is_in_light_window
 
 
-
-
-# todo read me in
-CHANNEL_ID = "1224514100210569327"
-BOT_TOKEN = load_token()
-CAM_INDEX = find_cam_index()
-MOTION_THRESHOLD_PX = 10000
 
 def main() -> None:
     # cap = cv2.VideoCapture(CAM_INDEX)
