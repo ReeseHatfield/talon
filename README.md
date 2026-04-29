@@ -27,6 +27,7 @@ You will need
 ### "Hardware":
 I built a super-janky renter-friendly bird feeder setup out of a broken marble table.
 The weight attached to the bottom is for ensuring the motion sensor does not trigger with the wind.
+
 ![Bird Feeder](./img/feeder.png)
 
 
