@@ -29,7 +29,7 @@ def load_token() -> str:
 
 def check_time(last_capture) -> bool:
     now = time.time()
-    return now - last_capture > 30
+    return now - last_capture > 2
 
 
 def clear_cap_buffer(cap) -> None:
