@@ -9,7 +9,7 @@ import time
 CHANNEL_ID = "1224514100210569327"
 BOT_TOKEN = load_token()
 CAM_INDEX = find_cam_index()
-MOTION_THRESHOLD_PX = 10000
+MOTION_THRESHOLD_PX = 8000
 
 
 # I hate this, but i feel like it might be the best way sadly
@@ -77,8 +77,8 @@ def is_dark_in_dayton():
     decimal_hour = now.hour + decimal_minute
     
     
-    is_in_light_window = 7.0 <= decimal_hour and decimal_hour <= 19.5 
-    # 7 am to 730 pm
+    is_in_light_window = 6.0 <= decimal_hour and decimal_hour <= 19.5 
+    # 6 am to 730 pm
     return not is_in_light_window
 
 

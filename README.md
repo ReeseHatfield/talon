@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/reesehatfield/talon">
-    <img src="./img/real_bird.png" alt="Actually a bird" width="400" height="370">
+    <img src="./img/cardinal.png" alt="Actually a bird" width="400" height="370">
   </a>
 </p>
 
@@ -41,3 +41,8 @@ echo "TOKEN=[YOUR_TOKEN_HERE]" > .env
 ```
 Run the project on your server with `./talon.sh`. 
 This script should handle virtual environments and dependencies.
+
+## Gallery
+![Cardinal 1](./img/cardinal-1.png)
+![Cardinal 2](./img/cardinal-2.png)
+![Pigeon](./img/pidgeon.png)
