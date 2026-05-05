@@ -81,7 +81,7 @@ def is_dark_in_dayton():
 CHANNEL_ID = "1224514100210569327"
 BOT_TOKEN = load_token()
 CAM_INDEX = find_cam_index()
-MOTION_THRESHOLD_PX = 8000
+MOTION_THRESHOLD_PX = 1000
 
 def main() -> None:
     # cap = cv2.VideoCapture(CAM_INDEX)
