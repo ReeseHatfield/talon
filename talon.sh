@@ -1,6 +1,9 @@
 #!/bin/bash
 
+git pull --rebase
+
 pip install --upgrade pip
+
 
 if [ ! -d "venv" ]; then
     python3 -m venv venv
